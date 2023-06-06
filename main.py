@@ -42,9 +42,20 @@ class Calculator(QWidget):
             button = QPushButton(key)
             self.main_layout.addWidget(button, *value) #tupple unpacking
             # create dico of buttons to connect them to slots
+            if key not in ["=", "C"]:
+            # connect button
+                button.clicked.connect(self.button_pressed)
             self.buttons[key] = button
+        self.buttons["C"].clicked.connect(self.clear_result) # say that this method 'clear_result' is called when connect signal is broadcasted
 
+    def clear_result(self):
+        self.result_and_adit.setText("0")
 
+    def button_pressed(self):
+        if self.result_and_adit.text() == "0":
+            self.result_and_adit.clear()
+        # print(self.sender().text()) self.sender => selon le btn on recuperer <PySide6.QtWidgets.QPushButton(0x26aa67ccd70) at 0x0000026AA6F68D40> et ave le texte() on recuperer le key de b
+        self.result_and_adit.setText(self.result_and_adit.text() + self.sender().text())
 
 
 
