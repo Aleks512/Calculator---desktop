@@ -47,9 +47,17 @@ class Calculator(QWidget):
                 button.clicked.connect(self.button_pressed)
             self.buttons[key] = button
         self.buttons["C"].clicked.connect(self.clear_result) # say that this method 'clear_result' is called when connect signal is broadcasted
+        self.buttons["="].clicked.connect(self.compute_result)
 
     def clear_result(self):
         self.result_and_adit.setText("0")
+
+    def compute_result(self):
+        try:
+            result = eval(self.result_and_adit.text().replace("x", "*"))
+        except SyntaxError:
+            return
+        self.result_and_adit.setText(str(result))
 
     def button_pressed(self):
         if self.result_and_adit.text() == "0":
