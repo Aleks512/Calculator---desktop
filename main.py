@@ -31,17 +31,17 @@ class Calculator(QWidget):
         self.main_layout = QGridLayout(self)
 
         # set up input and result window
-        self.result_and_adit = QLineEdit("0")
+        self.result_and_edit = QLineEdit("0")
 
         # add it to main layout with coordinates
-        self.main_layout.addWidget(self.result_and_adit, 0, 0, 1, 4)
+        self.main_layout.addWidget(self.result_and_edit, 0, 0, 1, 4)
 
         # create all BUTTONS
 
         for key, value in BUTTONS.items():
             button = QPushButton(key)
             self.main_layout.addWidget(button, *value) #tupple unpacking
-            # create dico of buttons to connect them to slots
+            #eliminer les "=" et "C"  de self.buttons[key] = button
             if key not in ["=", "C"]:
             # connect button
                 button.clicked.connect(self.button_pressed)
@@ -50,20 +50,24 @@ class Calculator(QWidget):
         self.buttons["="].clicked.connect(self.compute_result)
 
     def clear_result(self):
-        self.result_and_adit.setText("0")
+        self.result_and_edit.setText("0")
 
     def compute_result(self):
         try:
-            result = eval(self.result_and_adit.text().replace("x", "*"))
-        except SyntaxError:
-            return
-        self.result_and_adit.setText(str(result))
+            result = eval(self.result_and_edit.text().replace("x", "*"))
+        except SyntaxError: #error like "120jdkskn" and then "=" in lineedit
+            return # do nothing, stop the method
+        self.result_and_edit.setText(str(result))
 
     def button_pressed(self):
-        if self.result_and_adit.text() == "0":
-            self.result_and_adit.clear()
+        if self.result_and_edit.text() == "0":
+            self.result_and_edit.clear()
         # print(self.sender().text()) self.sender => selon le btn on recuperer <PySide6.QtWidgets.QPushButton(0x26aa67ccd70) at 0x0000026AA6F68D40> et ave le texte() on recuperer le key de b
-        self.result_and_adit.setText(self.result_and_adit.text() + self.sender().text())
+        button_number = self.sender().text() # self.sender().text() recupere le widget en texte qui a declanché la méthode
+        capture_text = self.result_and_edit.text()
+
+        self.result_and_edit.setText(capture_text + button_number)
+
 
 
 
